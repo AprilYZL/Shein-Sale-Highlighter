@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+body {
+  width: 300px;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background: #fafbfc;
+  color: #181818;
+  margin: 0;
+}
+
+.header h1 {
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 5px;
+  color: #181818;
+}
+
+.header p {
+  font-size: 12px;
+  margin: 0;
+  opacity: 0.7;
+  color: #444;
+}
+
+.stats {
+  background: #f3f4f6;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: #181818;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+}
+
+.stats .number {
+  font-size: 24px;
+  font-weight: bold;
+  color: #111;
+}
+
+.threshold-control label {
+  font-size: 12px;
+  margin-bottom: 5px;
+  display: block;
+  color: #222;
+}
+
+.threshold-control input[type="range"] {
+  background: #e5e7eb;
+  height: 6px;
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.threshold-control input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #181818;
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
+
+.btn {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  background: #181818;
+  color: #fff;
+}
+
+.btn:hover {
+  background: #111;
+  transform: translateY(-2px);
+}
+
+.btn.secondary {
+  background: #f3f4f6;
+  color: #181818;
+  border: 1px solid #e5e7eb;
+}
+
+.btn.secondary:hover {
+  background: #e5e7eb;
+}
+
+.footer {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 10px;
+  opacity: 0.7;
+  color: #888;
+}
+
+.sale-highlighted {
+  position: relative !important;
+  border: 2px solid #181818 !important;
+  background: #f3f4f6 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 8px rgba(0,0,0,0.06) !important;
+  transition: all 0.3s ease !important;
+  animation: none !important;
+}
+
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🏷️ Shein Sale Highlighter</h1>
+    <p>Find deals faster on Shein</p>
+  </div>
+  
+  <div class="stats">
+    <h3>Sale Items Found</h3>
+    <div class="number" id="saleCount">0</div>
+  </div>
+  
+  <div class="controls">
+    <div class="threshold-control">
+      <label for="thresholdSlider">Minimum Discount: <span id="thresholdDisplay">0%</span></label>
+      <input type="range" id="thresholdSlider" min="0" max="90" value="0" step="5" style="width: 100%; margin: 5px 0;">
+    </div>
+    <button class="btn" id="refreshBtn">🔄 Refresh Scan</button>
+    <button class="btn secondary" id="toggleBtn">👁️ Toggle Highlights</button>
+  </div>
+  
+  <div class="footer">
+    <p>Published by AprilYZL</p>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

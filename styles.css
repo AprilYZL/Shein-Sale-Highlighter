@@ -1,0 +1,35 @@
+/* Styles for sale item highlighting */
+
+.sale-highlighted {
+  position: relative !important;
+  border: 2px solid #181818 !important;
+  background: #f3f4f6 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 0 8px rgba(0,0,0,0.06) !important;
+  transition: all 0.3s ease !important;
+  animation: none !important;
+}
+
+.not-sale {
+  position: relative !important;
+  border: 2px solid #e5e7eb !important;
+  background: #fafbfc !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  transition: all 0.3s ease !important;
+}
+
+.sale-highlighted:hover {
+  transform: scale(1.02) !important;
+  box-shadow: 0 0 12px rgba(24,24,24,0.10) !important;
+}
+
+/* Remove pulsing animation for a minimal look */
+@keyframes saleGlow {
+  0% {
+    box-shadow: 0 0 8px rgba(0,0,0,0.06);
+  }
+  100% {
+    box-shadow: 0 0 12px rgba(24,24,24,0.10);
+  }
+}
