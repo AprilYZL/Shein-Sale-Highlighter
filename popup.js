@@ -29,84 +29,72 @@ document.addEventListener("DOMContentLoaded", function () {
         target: { tabId: tabs[0].id },
         function: function () {
           const highlights = document.querySelectorAll(".not-sale");
-          if (highlights.length === 0) return false;
-          
-          const isVisible = highlights[0].style.display !== "none";
-          const newDisplay = isVisible ? "none" : "block";
-          
+          const isVisible =
+            highlights.length > 0 && highlights[0].style.display !== "none";
           highlights.forEach((el) => {
-            el.style.display = newDisplay;
+            el.style.display = isVisible ? "none" : "block";
+
           });
-          
           return !isVisible;
         },
       });
     });
   });
 
-  let thresholdTimeout;
-
   thresholdSlider.addEventListener("input", function () {
     const threshold = parseInt(this.value);
     thresholdDisplay.textContent = threshold + "%";
-    
-    // Clear previous timeout
-    clearTimeout(thresholdTimeout);
-    
-    // Debounce the actual processing
-    thresholdTimeout = setTimeout(() => {
-      chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.scripting.executeScript(
-          {
-            target: { tabId: tabs[0].id },
-            function: function (threshold) {
-              const productCards = document.querySelectorAll(SELECTORS.PRODUCT_CARDS);
-              const discountSpans = document.querySelectorAll(SELECTORS.DISCOUNT_TEXT);
-              
-              // Reset all cards first
-              productCards.forEach((card) => {
-                card.classList.remove("sale-highlighted", "not-sale");
-                card.style.display = "block";
-                card.dataset.saleHighlighted = "false";
-              });
-              
-              let highlightedCount = 0;
-              
-              // Process discounts
-              discountSpans.forEach((span) => {
-                const discountMatch = span.textContent;
-                if (discountMatch) {
-                  const match = discountMatch.match(/-(\d+)%/);
-                  const discount = match ? parseInt(match[1]) : 0;
-                  const parent = span.closest(SELECTORS.PRODUCT_CARDS);
-                  
-                  if (parent && discount >= threshold) {
-                    parent.classList.add("sale-highlighted");
-                    parent.dataset.saleHighlighted = "true";
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.scripting.executeScript(
+        {
+          target: { tabId: tabs[0].id },
+          function: function (threshold) {
+             const highlights = document.querySelectorAll(".not-sale");
+            highlights.forEach((el) => {
+              el.style.display = "block"; // Ensure all cards are visible
+            });
+            let highlightedCount = 0;
+            document.querySelectorAll(".discount-text").forEach((span) => {
+              const discountMatch = span.textContent;
+              if (discountMatch) {
+                const match = discountMatch.match(/-(\d+)%/);
+                const discount = match ? parseInt(match[1]) : 0;
+                const parent = span.closest(".product-card");
+                if (parent) {
+                  if (discount >= threshold) {
+                    if (!parent.classList.contains("sale-highlighted")) {
+                      parent.classList.add("sale-highlighted");
+                      parent.dataset.saleHighlighted = "true";
+                    }
                     highlightedCount++;
+                    parent.classList.remove("not-sale");
+                  } else {
+                    parent.classList.remove("sale-highlighted");
+                    parent.dataset.saleHighlighted = "false";
                   }
                 }
-              });
-              
-              // Add not-sale class to remaining cards
-              productCards.forEach((card) => {
-                if (!card.classList.contains("sale-highlighted")) {
-                  card.classList.add("not-sale");
-                  card.dataset.saleHighlighted = "false";
-                }
-              });
-              
-              return highlightedCount;
-            },
-            args: [threshold],
+              }
+            });
+
+            document.querySelectorAll(".product-card").forEach((card) => {
+              if (
+                !card.classList.contains("sale-highlighted") &&
+                !card.classList.contains("not-sale")
+              ) {
+                card.classList.add("not-sale");
+                card.dataset.saleHighlighted = "false";
+              }
+            });
+            return highlightedCount;
           },
-          function (results) {
-            if (results && results[0]) {
-              saleCountEl.textContent = results[0].result || 0;
-            }
+          args: [threshold],
+        },
+        function (results) {
+          if (results && results[0]) {
+            saleCountEl.textContent = results[0].result || 0;
           }
-        );
-      });
-    }, 150); // 150ms delay
+        }
+      );
+    });
   });
 });
